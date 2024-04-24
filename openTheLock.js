@@ -11,36 +11,34 @@ Given a target representing the value of the wheels that will unlock the lock, r
 */
 
 const openLock = (deadends, target) => {
-    const dead = new Set(deadends); // Convert to a set for faster access
+    const dead = new Set(deadends);
     const visited = new Set();
     const queue = [];
     const initial = '0000';
 
-    if (dead.has(initial)) return -1; // Special case if initial is a deadend
-    if (initial === target) return 0; // Special case if initial is already the target
+    if (dead.has(initial)) return -1;
+    if (initial === target) return 0;
 
-    queue.push([initial, 0]); // Push initial state with 0 moves
+    queue.push([initial, 0]);
     visited.add(initial);
 
     while (queue.length > 0) {
-        const [state, turns] = queue.shift(); // Get the current state and number of turns taken to reach here
+        const [state, turns] = queue.shift();
 
-        for (let i = 0; i < 4; i++) { // For each of the 4 wheels
+        for (let i = 0; i < 4; i++) {
             const num = parseInt(state[i], 10);
-            const up = (num + 1) % 10; // Increment the wheel, wrap around with mod 10
-            const down = (num - 1 + 10) % 10; // Decrement the wheel, wrap around with mod 10
+            const up = (num + 1) % 10;
+            const down = (num - 1 + 10) % 10;
 
-            const nextState1 = state.substring(0, i) + up + state.substring(i + 1); // Next state after turning wheel up
-            const nextState2 = state.substring(0, i) + down + state.substring(i + 1); // Next state after turning wheel down
+            const nextState1 = state.substring(0, i) + up + state.substring(i + 1);
+            const nextState2 = state.substring(0, i) + down + state.substring(i + 1);
 
-            // Check the next state1
             if (!visited.has(nextState1) && !dead.has(nextState1)) {
-                if (nextState1 === target) return turns + 1; // If reached target, return turns taken
+                if (nextState1 === target) return turns + 1;
                 queue.push([nextState1, turns + 1]);
                 visited.add(nextState1);
             }
 
-            // Check the next state2
             if (!visited.has(nextState2) && !dead.has(nextState2)) {
                 if (nextState2 === target) return turns + 1;
                 queue.push([nextState2, turns + 1]);
@@ -49,7 +47,7 @@ const openLock = (deadends, target) => {
         }
     }
 
-    return -1; // If all possibilities are exhausted, return -1
+    return -1; 
 }
 
 // test cases
