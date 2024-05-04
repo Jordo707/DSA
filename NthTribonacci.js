@@ -33,4 +33,5 @@ const tribonacci = n => {
 
 // test cases
 console.log(tribonacci(4)) // expect 4
+console.log(tribonacci(9)) // expect 81
 console.log(tribonacci(25)) // expect 1389537
