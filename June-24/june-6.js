@@ -36,3 +36,4 @@ const isNStraightHand = (hand, groupSize) => {
 // Test Cases
 console.log(isNStraightHand([1,2,3,6,2,3,4,7,8],3)); // Expect true
 console.log(isNStraightHand([1,2,3,4,5],4)); // Expect false
+console.log(isNStraightHand([1,2,3,4],4)); // Expect true
