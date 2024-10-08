@@ -14,27 +14,27 @@ Return the minimum number of swaps to make s balanced.
 */
 
 const minSwaps = s => {
-    let balance = 0;
-    let minSwaps = 0;
+    let imbalance = 0;
+    let swaps = 0;
 
-    for (let char of s) {
-        if (char === '[') {
-            balance += 1;
-        } else { // char === ']'
-            balance -= 1;
-        }
+    for (let i = 0; i < s.length; i++) {
+      if (s[i] === '[') {
+        imbalance++; // Increase balance for opening bracket
+      } else {
+        imbalance--; // Decrease balance for closing bracket
+      }
 
-        // If balance is negative, it means there are more `]` than `[`
-        if (balance < 0) {
-            minSwaps += 1; // Need one swap for this imbalance
-            balance = 0;   // Reset balance after swap
-        }
+      // If imbalance is negative, it means we need to "swap"
+      if (imbalance < 0) {
+        swaps++; // Increment swap count
+        imbalance = 1; // Reset imbalance as we're simulating a swap
+      }
     }
 
-    return minSwaps;
-}
+    return swaps;
+  }
 
-// Test Cases
-console.log(minSwaps('][][')); // 1
-console.log(minSwaps(']]][[[')); // 2
-console.log(minSwaps('[]')); // 0
+  // Test Cases
+  console.log(minSwaps('][][')); // 1
+  console.log(minSwaps(']]][[[')); // 2
+  console.log(minSwaps('[]')); // 0
