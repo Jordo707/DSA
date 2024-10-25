@@ -10,30 +10,39 @@ A subarray is defined as a contiguous block of elements in the array.
 
 const minSubarray = (nums, p) => {
     const totalSum = nums.reduce((sum, num) => sum + num, 0);
-    const target = totalSum % p;
-    if (target === 0) return 0; // No need to remove any subarray if the sum is already divisible
+    const targetRemainder = totalSum % p;
 
-    const prefixSum = new Map();
-    prefixSum.set(0, -1); // Base case: prefix sum at index -1
-    let minLen = Infinity;
-    let currentSum = 0;
+    // If the total sum is already divisible by p, no need to remove anything
+    if (targetRemainder === 0) return 0;
+
+    const prefixRemainders = new Map();
+    prefixRemainders.set(0, -1); // Initialize with prefix remainder 0 at index -1
+    let minLen = nums.length;
+    let currentPrefixSum = 0;
 
     for (let i = 0; i < nums.length; i++) {
-        currentSum = (currentSum + nums[i]) % p;
-        const neededMod = (currentSum - target + p) % p;
+        currentPrefixSum += nums[i];
+        let currentRemainder = currentPrefixSum % p;
 
-        if (prefixSum.has(neededMod)) {
-            minLen = Math.min(minLen, i - prefixSum.get(neededMod));
+        // Compute needed remainder to achieve target remainder after removal
+        let neededRemainder = (currentRemainder - targetRemainder + p) % p;
+
+        // Check if there's a prefix with the required remainder
+        if (prefixRemainders.has(neededRemainder)) {
+            let prevIndex = prefixRemainders.get(neededRemainder);
+            minLen = Math.min(minLen, i - prevIndex);
         }
 
-        prefixSum.set(currentSum, i);
+        // Store the current remainder and index in map
+        prefixRemainders.set(currentRemainder, i);
     }
 
-    return minLen === Infinity ? -1 : minLen;
-}
+    // Return -1 if minLen was not updated, meaning no valid subarray found
+    return minLen < nums.length ? minLen : -1;
+};
 
 // Test Cases
-console.log(minSubarray([3,1,4,2],6)); // Expected output: 1
-console.log(minSubarray([6,3,5,2],9)); // Expected output: 2
-console.log(minSubarray([1,2,3],3)); // Expected output: 0
+console.log(minSubarray([3, 1, 4, 2], 6)); // Output: 1
+console.log(minSubarray([6, 3, 5, 2], 9)); // Output: 2
+console.log(minSubarray([1, 2, 3], 3)); // Output: 0
 
