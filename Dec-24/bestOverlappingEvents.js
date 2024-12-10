@@ -12,8 +12,8 @@ const maxTwoEvents = (events) => {
     // Sort events by their end time
     events.sort((a, b) => a[1] - b[1]);
 
-    let maxSingle = 0; // Maximum value of a single event seen so far
-    let maxSum = 0; // Maximum value of up to two events
+    let maxSum = 0; // Maximum value of two events
+    let bestSingleValue = 0; // Best single event value seen so far
 
     // Helper function to find the last non-overlapping event using binary search
     const findLastNonOverlapping = (index) => {
@@ -32,19 +32,22 @@ const maxTwoEvents = (events) => {
     for (let i = 0; i < events.length; i++) {
         const [start, end, value] = events[i];
 
-        // Update the maximum single event value
-        maxSingle = Math.max(maxSingle, value);
-
         // Find the best non-overlapping event
         const lastNonOverlappingIndex = findLastNonOverlapping(i);
+        let valueWithBestNonOverlapping = value;
 
-        // Compute the best sum of two events if the current event is included
         if (lastNonOverlappingIndex !== -1) {
-            maxSum = Math.max(maxSum, value + events[lastNonOverlappingIndex][2]);
+            valueWithBestNonOverlapping += events[lastNonOverlappingIndex][2];
         }
 
-        // Also consider the single event value as a potential maximum
-        maxSum = Math.max(maxSum, value);
+        // Update the maximum value of two events
+        maxSum = Math.max(maxSum, valueWithBestNonOverlapping);
+
+        // Update the best single event value
+        bestSingleValue = Math.max(bestSingleValue, value);
+
+        // Ensure maxSum considers only one event in edge cases
+        maxSum = Math.max(maxSum, bestSingleValue);
     }
 
     return maxSum;
